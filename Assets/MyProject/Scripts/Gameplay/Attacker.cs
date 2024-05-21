@@ -41,7 +41,7 @@ public class Attacker : MonoBehaviour
         {
             if (_hits[i].TryGetComponent<IDamageable>(out var damageable))
             {
-                damageable.TakeDamage(_damage);
+                damageable.TakeDamage?.Invoke(this, _damage);
             }
         }
     }
