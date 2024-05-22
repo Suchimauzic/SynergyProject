@@ -23,17 +23,29 @@ public class Attacker : MonoBehaviour
             _attackTime -= Time.deltaTime;
         }
 
-        if (Input.GetMouseButtonDown(0) && CanAttack)
-        {
-            byte attackVariant = (byte)Random.Range(0, 2);
-            _animator.SetInteger("AttackVariant", attackVariant);
-            _animator.SetTrigger("Attack");
-            ResetAttackTimer();
-            AttackNearEnemies();
-        }
+        //if (Input.GetMouseButtonDown(0) && CanAttack)
+        //{
+        //    byte attackVariant = (byte)Random.Range(0, 2);
+        //    _animator.SetInteger("AttackVariant", attackVariant);
+        //    _animator.SetTrigger("Attack");
+        //    ResetAttackTimer();
+        //    AttackNear();
+        //}
     }
 
-    private void AttackNearEnemies()
+    public void MeleeAttack()
+    {
+        if (!CanAttack)
+            return;
+
+        byte attackVariant = (byte)Random.Range(0, 2);
+        _animator.SetInteger("AttackVariant", attackVariant);
+        _animator.SetTrigger("Attack");
+        ResetAttackTimer();
+        AttackNear();
+    }
+
+    private void AttackNear()
     {
         int count = Physics.OverlapSphereNonAlloc(transform.position, _radius, _hits, _damageMask);
 

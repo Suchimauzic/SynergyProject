@@ -13,30 +13,37 @@ public class EnemyMelee : Enemy, IMovable
     private float _currentSpeed = 0;
 
     public float Speed => _currentSpeed;
+    public float MaxSpeed => _maxSpeed;
+    public float SpeedIncrease => _speedIncrease;
+
 
     private void Awake()
     {
+        _stateMachine = new StateMachine();
+        _stateMachine.AddState(new IdleState(_stateMachine, _animator));
+        _stateMachine.AddState(new MoveState(_stateMachine, _animator, this));
+        _stateMachine.SetState<IdleState>();
+
         _currentHealth = _maxHealth;
         _isAlive = _currentHealth > 0;
     }
 
     private void Update()
     {
-        if (_agent.hasPath)
-        {
-            _currentSpeed += _speedIncrease * Time.deltaTime;
-            
-        }
-
         if (!_agent.hasPath)
         {
-            _currentSpeed = 0;
+            _stateMachine.SetState<IdleState>();
             Vector3 point = RandomWayPoint();
             _agent.SetDestination(point);
         }
+        else
+        {
+            _stateMachine.SetState<MoveState>();
+        }
 
-        _agent.speed = _currentSpeed;
-        _animator.SetFloat("Speed", _currentSpeed);
+        _agent.speed = _animator.GetFloat("Speed");
+
+        _stateMachine.Update();
     }
 
     private Vector3 RandomWayPoint()

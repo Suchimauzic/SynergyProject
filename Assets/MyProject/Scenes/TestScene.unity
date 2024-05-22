@@ -1946,11 +1946,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 2399490265645800887, guid: 6b76954fd12a5e04b8d964459696f47b,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 9063109310046735198, guid: 6b76954fd12a5e04b8d964459696f47b,
         type: 3}
       propertyPath: m_LocalPosition.x

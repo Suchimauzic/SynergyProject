@@ -8,6 +8,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected int _currentHealth;
     protected bool _isAlive = true;
 
+    protected private StateMachine _stateMachine;
+
     public int Health => _currentHealth;
 
     public EventHandler<int> TakeDamage => OnTakeDamage;
