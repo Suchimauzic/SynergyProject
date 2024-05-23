@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput), typeof(Attacker))]
-public class NewBehaviourScript : MonoBehaviour, IDamageable
+public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField] private CharacterController _characterController;
     [SerializeField] private Animator _animator;
@@ -24,6 +24,23 @@ public class NewBehaviourScript : MonoBehaviour, IDamageable
     //private Vector3 _oldInput;
     private Camera _camera;
 
+    public int MaxHealth => _maxHealth;
+    public int CurrentHealth
+    {
+        get => _currentHealth;
+        set
+        {
+            _currentHealth = value;
+            HealthChanged?.Invoke(_currentHealth);
+        }
+    }
+
+    #region Events
+
+    public event Action<int> HealthChanged;
+
+    #endregion
+
     #region Interfaces
 
     public int Health => _currentHealth;
@@ -38,13 +55,14 @@ public class NewBehaviourScript : MonoBehaviour, IDamageable
         _attacker = GetComponent<Attacker>();
         _input = GetComponent<PlayerInput>();
         _move = _input.actions["Movement"];
+
+        _currentSpeed = _minSpeed;
+        _currentHealth = _maxHealth;
+        _isAlive = _currentHealth > 0;
     }
 
     private void Start()
     {
-        _currentSpeed = _minSpeed;
-        _currentHealth = _maxHealth;
-        _isAlive = _currentHealth > 0;
         _camera = Camera.main;
     }
 
@@ -93,10 +111,10 @@ public class NewBehaviourScript : MonoBehaviour, IDamageable
     private void OnHeal(object sender, int heal)
     {
         if (_currentHealth < _maxHealth)
-            _currentHealth += heal;
+            CurrentHealth += heal;
 
         if (_currentHealth > _maxHealth)
-            _currentHealth = _maxHealth;
+            CurrentHealth = _maxHealth;
     }
 
     private void OnTakeDamage(object sender, int damage)
@@ -106,11 +124,11 @@ public class NewBehaviourScript : MonoBehaviour, IDamageable
 
         if (Health > damage)
         {
-            _currentHealth -= damage;
+            CurrentHealth -= damage;
         }
         else if (_isAlive)
         {
-            _currentHealth = 0;
+            CurrentHealth = 0;
             Die();
         }
 
